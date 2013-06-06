@@ -6,9 +6,13 @@ require 'timeline/helpers'
 require 'timeline/track'
 require 'timeline/actor'
 require 'timeline/activity'
+require 'timeline/controller_helper'
+
 
 module Timeline
   extend Config
   extend Helpers
 end
+
+ActionController::Base.send :include, RedisTimeline::ControllerHelper
 
