@@ -27,7 +27,7 @@ module Timeline
         @mentionable = options.delete :mentionable
 
         #method_name = "track_#{@name}_after_#{@callback}".to_sym
-        add_activity( activity(verb: options[:verb]) )
+        add_activity(activity(verb: options[:verb]))
       end 
     end
   end
