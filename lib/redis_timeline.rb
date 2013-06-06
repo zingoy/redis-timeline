@@ -14,5 +14,5 @@ module Timeline
   extend Helpers
 end
 
-ActionController::Base.send :include, RedisTimeline::ControllerHelper
+ActionController::Base.send :include, Timeline::ControllerHelper
 
