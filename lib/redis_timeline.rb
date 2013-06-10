@@ -1,4 +1,5 @@
 require 'active_support/concern'
+require 'action_controller'
 require 'multi_json'
 require 'hashie'
 require 'timeline/config'
