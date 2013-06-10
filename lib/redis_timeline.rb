@@ -6,14 +6,14 @@ require 'timeline/helpers'
 require 'timeline/track'
 require 'timeline/actor'
 require 'timeline/activity'
-require 'timeline/controller_helper'
 
 
 module Timeline
   extend Config
   extend Helpers
-  #ActionController::Base.send :include, Timeline::ControllerHelper
 end
 
-#ActionController::Base.send :include, Timeline::ControllerHelper
+require 'timeline/controller_helper'
+
+ActionController::Base.send :include, Timeline::ControllerHelper
 
