@@ -30,6 +30,7 @@ module Timeline
       #  @actor = send(options[:actor])
 
         @target = !options[:target].nil? ? send(options[:target].to_sym) : nil
+        options[:verb] = name
 
         add_activity(activity(verb: options[:verb]))
       end 
@@ -38,7 +39,6 @@ module Timeline
   # track_timeline_activity(:new_coupon,actor: :user,object: :coupon_code,followers: :followers)
 
 
-   protected
      def activity(options={})
       {
         verb: options[:verb],
