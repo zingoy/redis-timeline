@@ -30,8 +30,9 @@ module Timeline
 
         add_activity(activity(verb: options[:verb]))
       end 
-    end
 
+
+      
   protected
 
     def activity(options={})
@@ -113,6 +114,8 @@ module Timeline
       end
     end
   end
+    end
+
   # track_timeline_activity(:new_coupon,actor: :user,object: :coupon_code,followers: :followers)
 
 
