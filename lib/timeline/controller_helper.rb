@@ -10,33 +10,37 @@ module Timeline
         $redis.sadd("shiva", value)
       end
 
-      def track_timeline_activity(actor, name, object, target, followers, options={})
+      def track_timeline_activity(name, options={})
         @name = name
-        @callback = options.delete :on
-        @callback ||= :create
-        @actor = actor
+        #@callback = options.delete :on
+        #@callback ||= :create
+        @actor = options.delete :actor
+        @actor ||= :creator
+        @object = options.delete :object
+        @target = options.delete :target
+        @followers = options.delete :followers
+        @followers ||= :followers
+        @mentionable = options.delete :mentionable
+       
         @fields_for = {}
         @extra_fields ||= nil
         @merge_similar = options[:merge_similar] == true ? true : false
-        @actor ||= options.delete :actor
-        @object = object || options.delete(:object)
-        @target = target || options.delete(:target)
-        @followers = followers || options.delete(:followers)
-        @followers ||= :followers
-        @followers = @actor.send(options[:followers].to_sym)
+      #  @followers = @actor.send(options[:followers].to_sym)
         @mentionable = options.delete :mentionable
+      #  @actor = send(options[:actor])
 
-        #method_name = "track_#{@name}_after_#{@callback}".to_sym
+        @target = !options[:target].nil? ? send(options[:target].to_sym) : nil
+
         add_activity(activity(verb: options[:verb]))
       end 
     end
   end
+  # track_timeline_activity(:new_coupon,actor: :user,object: :coupon_code,followers: :followers)
 
 
    protected
-    def activity(options={})
+     def activity(options={})
       {
-        cache_key: "#{options[:verb]}_u#{@actor.id}_o#{@object.id}_#{Time.now.to_i}",
         verb: options[:verb],
         actor: options_for(@actor),
         object: options_for(@object),
@@ -46,16 +50,11 @@ module Timeline
     end
 
     def add_activity(activity_item)
-      redis_store_item(activity_item)
-      add_activity_by_global(activity_item)
+      redis_add "global:activity", activity_item
       add_activity_to_user(activity_item[:actor][:id], activity_item)
       add_activity_by_user(activity_item[:actor][:id], activity_item)
       add_mentions(activity_item)
       add_activity_to_followers(activity_item) if @followers.any?
-    end
-
-    def add_activity_by_global(activity_item)
-      redis_add "global:activity", activity_item
     end
 
     def add_activity_by_user(user_id, activity_item)
@@ -104,23 +103,7 @@ module Timeline
     end
 
     def redis_add(list, activity_item)
-      Timeline.redis.lpush list, activity_item[:cache_key]
-    end
-
-    def redis_store_item(activity_item)
-      if @merge_similar
-        # Merge similar item with last
-        last_item_text = Timeline.get_list(:list_name => "user:id:#{activity_item[:actor][:id]}:posts", :start => 0, :end => 1).first
-        if last_item_text
-          last_item = Timeline::Activity.new Timeline.decode(last_item_text)
-          if last_item[:verb].to_s == activity_item[:verb].to_s and last_item[:target] == activity_item[:target]
-            activity_item[:object] = [last_item[:object], activity_item[:object]].flatten.uniq
-          end
-          # Remove last similar item, it will merge to new item
-          Timeline.redis.del last_item[:cache_key]
-        end
-      end
-      Timeline.redis.set activity_item[:cache_key], Timeline.encode(activity_item)
+      Timeline.redis.lpush list, Timeline.encode(activity_item)
     end
 
     def set_object(object)
