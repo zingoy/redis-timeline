@@ -12,8 +12,6 @@ module Timeline
 
       def track_timeline_activity(name, options={})
         @name = name
-        #@callback = options.delete :on
-        #@callback ||= :create
         @actor = options.delete :actor
         @actor ||= :creator
         @object = options.delete :object
@@ -25,9 +23,7 @@ module Timeline
         @fields_for = {}
         @extra_fields ||= nil
         @merge_similar = options[:merge_similar] == true ? true : false
-      #  @followers = @actor.send(options[:followers].to_sym)
         @mentionable = options.delete :mentionable
-      #  @actor = send(options[:actor])
 
         @target = !options[:target].nil? ? send(options[:target].to_sym) : nil
         options[:verb] = name
@@ -35,11 +31,10 @@ module Timeline
         add_activity(activity(verb: options[:verb]))
       end 
     end
-  end
-  # track_timeline_activity(:new_coupon,actor: :user,object: :coupon_code,followers: :followers)
 
+  protected
 
-     def activity(options={})
+    def activity(options={})
       {
         verb: options[:verb],
         actor: options_for(@actor),
@@ -117,4 +112,9 @@ module Timeline
         self
       end
     end
+  end
+  # track_timeline_activity(:new_coupon,actor: :user,object: :coupon_code,followers: :followers)
+
+
+     
 end
