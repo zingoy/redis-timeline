@@ -24,24 +24,12 @@ module Timeline
         @merge_similar = options[:merge_similar] == true ? true : false
         options[:verb] = name
 
-
-        #add_activity(activity(verb: options[:verb]))
-        define_activity_method @name, actor: @actor, object: @object, target: @target, followers: @followers, verb: name, mentionable: @mentionable
+        add_activity(activity(verb: options[:verb]))
       end 
 
       # track_timeline_activity(:new_coupon,actor: :user,object: :coupon_code,followers: :followers)
       
       protected
-      def define_activity_method(method_name, options={})
-        define_method method_name do
-          @fields_for = {}
-          @target = !options[:target].nil? ? send(options[:target].to_sym) : nil
-          @extra_fields ||= nil
-          @mentionable = options[:mentionable]
-          add_activity activity(verb: options[:verb])
-        end
-      end
-
    
       def activity(options={})
         {
