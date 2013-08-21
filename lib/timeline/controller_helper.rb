@@ -37,6 +37,11 @@ module Timeline
         }
       end
 
+      def trim_activity(options={})
+        Timeline.redis.ltrim "global:activity:#{options[:name]}" ,options[:start] , options[:end] if options[:name].present?
+        Timeline.redis.ltrim "global:activity" ,options[:start] , options[:end] 
+      end
+
       def add_activity(activity_item)
         redis_add "global:activity", activity_item
         redis_add "global:activity:#{activity_item[:verb]}", activity_item
