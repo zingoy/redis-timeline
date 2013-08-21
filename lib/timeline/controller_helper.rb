@@ -37,9 +37,11 @@ module Timeline
         }
       end
 
-      def trim_activity(options={})
-        Timeline.redis.ltrim "global:activity:#{options[:name]}" ,options[:start] , options[:end] if options[:name].present?
-        Timeline.redis.ltrim "global:activity" ,options[:start] , options[:end] 
+      def trim_activity(options={}) 
+        start_value = options[:start] || 0
+        end_value = options[:end] || 99
+        Timeline.redis.ltrim "global:activity:#{options[:name]}" ,end_value , start_value if options[:name].present?
+        Timeline.redis.ltrim "global:activity" , start_value , end_value
       end
 
       def add_activity(activity_item)
