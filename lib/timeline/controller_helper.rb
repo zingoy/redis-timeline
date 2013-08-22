@@ -8,8 +8,8 @@ module Timeline
     module InstanceMethods
       def track_timeline_activity(name, options={})
         @name = name
-        @start_value = options.delete :start || 0
-        @end_value = options.delete :end || -1
+        @start_value = 0
+        @limit_records = options.delete :limit_records || -1
         @actor = options.delete :actor
         @actor ||= :creator
         @object = options.delete :object
@@ -95,7 +95,7 @@ module Timeline
 
       def redis_add(list, activity_item)
         Timeline.redis.lpush list, Timeline.encode(activity_item)
-        Timeline.redis.ltrim list , @start_value , @end_value
+        Timeline.redis.ltrim list , @start_value , @limit_records
       end
 
       def set_object(object)
