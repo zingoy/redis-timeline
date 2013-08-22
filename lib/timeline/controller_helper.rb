@@ -8,6 +8,8 @@ module Timeline
     module InstanceMethods
       def track_timeline_activity(name, options={})
         @name = name
+        @start_value = options.delete :start || 0
+        @end_value = options.delete :end || -1
         @actor = options.delete :actor
         @actor ||= :creator
         @object = options.delete :object
@@ -35,13 +37,6 @@ module Timeline
           target: options_for(@target),
           created_at: Time.now
         }
-      end
-
-      def trim_activity(options={}) 
-        start_value = options[:start] || 0
-        end_value = options[:end] || 99
-        Timeline.redis.ltrim "global:activity:#{options[:name]}" , start_value , end_value if options[:name].present?
-        Timeline.redis.ltrim "global:activity" , start_value , end_value
       end
 
       def add_activity(activity_item)
@@ -100,6 +95,7 @@ module Timeline
 
       def redis_add(list, activity_item)
         Timeline.redis.lpush list, Timeline.encode(activity_item)
+        Timeline.redis.ltrim list , @start_value , @end_value
       end
 
       def set_object(object)
