@@ -9,7 +9,7 @@ module Timeline
       def track_timeline_activity(name, options={})
         @name = name
         @start_value = 0
-        @limit_records = options.delete :limit_records || -1
+        @limit_records = options.delete(:limit_records) || -1
         @actor = options.delete :actor
         @actor ||= :creator
         @object = options.delete :object
