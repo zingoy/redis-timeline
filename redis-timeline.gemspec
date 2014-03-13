@@ -6,7 +6,7 @@ require "timeline/version"
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.name        = "redis_timeline"
-  s.version     = "0.1.8"
+  s.version     = Timeline::Version
   s.authors     = ["Felix Clack","Shiva Kumar"]
   s.email       = ["felixclack@gmail.com"]
   s.homepage    = "http://felixclack.github.com/redis-timeline"
@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency "redis"
   s.add_dependency "hashie"
   s.add_dependency "redis-namespace"
+  s.add_dependency 
 
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "rspec"
