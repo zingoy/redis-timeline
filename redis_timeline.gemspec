@@ -22,7 +22,6 @@ Gem::Specification.new do |s|
   s.add_dependency "redis"
   s.add_dependency "hashie"
   s.add_dependency "redis-namespace"
-  s.add_dependency 
 
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "rspec"
