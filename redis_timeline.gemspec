@@ -5,7 +5,7 @@ require "timeline/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = "redis_timeline"
+  s.name        = "redis-timeline"
   s.version     = Timeline::Version
   s.authors     = ["Felix Clack","Shiva Kumar"]
   s.email       = ["felixclack@gmail.com"]
